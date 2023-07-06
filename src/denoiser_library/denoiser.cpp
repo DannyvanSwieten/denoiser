@@ -7,10 +7,6 @@ Denoiser::Denoiser() : device(oidn::newDevice())
     const char *errorMessage;
     if (device.getError(errorMessage) != oidn::Error::None)
         std::cout << errorMessage << std::endl;
-
-    filter = device.newFilter("RT"); // generic ray tracing filter
-    if (device.getError(errorMessage) != oidn::Error::None)
-        std::cout << errorMessage << std::endl;
 }
 
 Denoiser::~Denoiser()
@@ -19,9 +15,14 @@ Denoiser::~Denoiser()
 
 void Denoiser::denoise(const int width, const int height, const float *beauty, const float *albedo, const float *normals, float *outputData)
 {
+    const char *errorMessage;
+    auto filter = device.newFilter("RT"); // generic ray tracing filter
+    if (device.getError(errorMessage) != oidn::Error::None)
+        std::cout << errorMessage << std::endl;
+
     const size_t size = width * height * 3 * sizeof(float);
     oidn::BufferRef colorBuf = device.newBuffer(size);
-    const char *errorMessage;
+
     if (device.getError(errorMessage) != oidn::Error::None)
         std::cout << errorMessage << std::endl;
 
@@ -36,6 +37,8 @@ void Denoiser::denoise(const int width, const int height, const float *beauty, c
         normalBuffer = device.newBuffer(size);
         std::memcpy(normalBuffer.getData(), beauty, size);
 
+        denoiseNormals(width, height, normalBuffer);
+
         filter.setImage("normal", normalBuffer, oidn::Format::Float3, width, height); // normals
     }
 
@@ -45,10 +48,13 @@ void Denoiser::denoise(const int width, const int height, const float *beauty, c
         albedoBuffer = device.newBuffer(size);
         std::memcpy(albedoBuffer.getData(), beauty, size);
 
-        filter.setImage("normal", albedoBuffer, oidn::Format::Float3, width, height); // normals
+        denoiseAlbedo(width, height, albedoBuffer);
+
+        filter.setImage("albedo", albedoBuffer, oidn::Format::Float3, width, height); // albedo
     }
 
     filter.setImage("output", colorBuf, oidn::Format::Float3, width, height); // denoised beauty
+    filter.set("cleanAux", true);
     if (device.getError(errorMessage) != oidn::Error::None)
         std::cout << errorMessage << std::endl;
     filter.set("hdr", true); // beauty image is HDR
@@ -67,4 +73,22 @@ void Denoiser::denoise(const int width, const int height, const float *beauty, c
     device.sync();
 
     std::memcpy(outputData, colorBuf.getData(), size);
+}
+
+void Denoiser::denoiseAlbedo(const int width, const int height, oidn::BufferRef &albedoBuffer)
+{
+    auto albedoFilter = device.newFilter("RT");                                         // generic ray tracing filter
+    albedoFilter.setImage("albedo", albedoBuffer, oidn::Format::Float3, width, height); // albedo
+    albedoFilter.setImage("output", albedoBuffer, oidn::Format::Float3, width, height); // denoised albedo
+    albedoFilter.commit();
+    albedoFilter.execute();
+}
+
+void Denoiser::denoiseNormals(const int width, const int height, oidn::BufferRef &albedoBuffer)
+{
+    auto normalFilter = device.newFilter("RT");                                         // generic ray tracing filter
+    normalFilter.setImage("normal", albedoBuffer, oidn::Format::Float3, width, height); // normals
+    normalFilter.setImage("output", albedoBuffer, oidn::Format::Float3, width, height); // denoised normals
+    normalFilter.commit();
+    normalFilter.execute();
 }
