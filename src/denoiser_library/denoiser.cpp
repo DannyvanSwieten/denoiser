@@ -64,5 +64,7 @@ void Denoiser::denoise(const int width, const int height, const float *beauty, c
     if (device.getError(errorMessage) != oidn::Error::None)
         std::cout << errorMessage << std::endl;
 
+    device.sync();
+
     std::memcpy(outputData, colorBuf.getData(), size);
 }
