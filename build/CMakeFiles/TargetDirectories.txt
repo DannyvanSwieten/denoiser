@@ -1,3 +1,0 @@
-C:/Users/danny/Documents/code/denoiser/build/CMakeFiles/Denoiser.dir
-C:/Users/danny/Documents/code/denoiser/build/CMakeFiles/edit_cache.dir
-C:/Users/danny/Documents/code/denoiser/build/CMakeFiles/rebuild_cache.dir
