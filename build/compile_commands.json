@@ -1,0 +1,12 @@
+[
+{
+  "directory": "C:/Users/danny/Documents/code/denoiser/build",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\CLANG_~1.EXE -DDenoiser_EXPORTS -IC:/Users/danny/Documents/code/denoiser/libs/oidn/include -g -Xclang -gcodeview -O0 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -std=gnu++17 -o CMakeFiles\\Denoiser.dir\\src\\denoiser_library\\denoiser.cpp.obj -c C:\\Users\\danny\\Documents\\code\\denoiser\\src\\denoiser_library\\denoiser.cpp",
+  "file": "C:\\Users\\danny\\Documents\\code\\denoiser\\src\\denoiser_library\\denoiser.cpp"
+},
+{
+  "directory": "C:/Users/danny/Documents/code/denoiser/build",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\CLANG_~1.EXE -DDenoiser_EXPORTS -IC:/Users/danny/Documents/code/denoiser/libs/oidn/include -g -Xclang -gcodeview -O0 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -std=gnu++17 -o CMakeFiles\\Denoiser.dir\\src\\denoiser_library\\lib.cpp.obj -c C:\\Users\\danny\\Documents\\code\\denoiser\\src\\denoiser_library\\lib.cpp",
+  "file": "C:\\Users\\danny\\Documents\\code\\denoiser\\src\\denoiser_library\\lib.cpp"
+}
+]
